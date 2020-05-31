@@ -1,0 +1,214 @@
+Option Explicit
+'To loop through each active worksheet (2014 to 2016) in the workbook through to
+    'a. Place each individual cusp-ticker in Column i
+    'b. Create a heading "Ticker" in Column i
+    'c. Calculate the total volume for each individual cusp-ticker and place each amount in Column L
+    'd. Create a title "Total Stock Volume" in Column L
+    'e. Calculate the yearly change in price per "Ticker" and place in Column J
+    'f. Calculate the percent yearly change in price per "Ticker" and place in Column K
+    'g. find the "Tickers" with biggest and smallest yearly change and with the highest volume
+    
+Sub StockCusipLoop():
+
+    Dim SCLoop As Worksheet
+    Dim Ticker As String
+    Dim Total_Stockvolume As Double
+    Dim Open_PriceperYear As Double
+    Dim Close_PriceperYear As Double
+    Dim Percent_YearChange As Double
+    Dim Yearly_Change As Double
+          
+'Create titles in Columns for "Ticker", "Total Stock Volume", "Yearly Change" and "Percent Change", "Greatest % Increase","Greatest % Decrease","Greatest Total Volume"
+ 'and "Value"
+ 
+For Each SCLoop In Worksheets
+         Range("I1").Value = "Ticker"
+         Range("L1").Value = "Total Stock Volume"
+         Range("J1").Value = "Yearly Change"
+         Range("K1").Value = "Percent Change"
+         Range("O2").Value = "Greatest % Increase"
+         Range("O3").Value = "Greatest % Decrease"
+         Range("O4").Value = "Greatest Total Volume"
+         Range("P1").Value = "Ticker"
+         Range("Q1").Value = "Value"
+         
+'Loop through each worksheet from Row2 to lastrow to get each individual ticker
+'Determine last row
+          
+'Set a variable Total Stock Volume
+        Total_Stockvolume = 0
+
+'Set initial row count for Worksheet
+        Dim rowcount As Long
+        rowcount = 2
+   
+'Loop through for each individual ticker
+        Dim i As Long
+        Dim lastrow As Long
+        
+        lastrow = SCLoop.Cells(Rows.Count, 1).End(xlUp).Row
+        
+        For i = 2 To lastrow
+    
+'Calculate the Total Stock Volume for each individual ticker
+
+    Total_Stockvolume = Total_Stockvolume + SCLoop.Cells(i, 7)
+
+'Use of conditional formatting to determine when each individual ticker symbol changes
+
+        If SCLoop.Cells(i, 1).Value <> SCLoop.Cells(i + 1, 1).Value Then
+
+'Organize each individual ticker in Column i with a summary table
+
+        SCLoop.Cells(rowcount, 9).Value = SCLoop.Cells(i, 1).Value
+
+'Organize total stock volume into the summary table
+
+        SCLoop.Cells(rowcount, 10).Value = Total_Stockvolume
+                
+'Place total stock volume in Column L by adding 1 to rowcount to get a summary table
+
+        rowcount = rowcount + 1
+
+'Reset total stock volume
+
+        Total_Stockvolume = 0
+
+        End If
+        Next i
+
+
+'Assign lastrow to count the number of rows in the summary table
+
+    lastrow = SCLoop.Cells(Rows.Count, 9).End(xlUp).Row
+
+ 
+'Set a variable for holding Open_PriceperYear
+            
+        Open_PriceperYear = 0
+        
+'Set a variable for Close_PriceperYear
+            
+        Close_PriceperYear = 0
+        
+'Set a variable for holding Yearly_Change
+            
+        Yearly_Change = 0
+        
+'Set a variable for holding Percent_YearChange
+             
+        Percent_YearChange = 0
+        
+'Know the location of each individual ticker in the summary table
+        
+        Dim Summary_TableRow As Long
+        Summary_TableRow = 2
+        
+'Set a variable for total rows to loop through
+            
+        lastrow = SCLoop.Cells(Rows.Count, 1).End(xlUp).Row
+        
+'Loop through for each ticker
+        
+        For i = 2 To lastrow
+            
+' Use conditional formatting to get Open_PriceperYear
+
+            If SCLoop.Cells(i, 1).Value <> SCLoop.Cells(i - 1, 1).Value Then
+               Open_PriceperYear = SCLoop.Cells(i, 3).Value
+                
+            End If
+            
+'Use conditional formatting to check if each individual ticker has changed
+
+            If SCLoop.Cells(i, 1).Value <> SCLoop.Cells(i + 1, 1).Value Then
+                                
+'Organize each individual ticker symbol in Summary Table
+                
+                SCLoop.Cells(Summary_TableRow, 9).Value = SCLoop.Cells(i, 1).Value
+                
+'Calculate the Total Stock Volume
+                
+                Total_Stockvolume = Total_Stockvolume + SCLoop.Cells(i, 7)
+                
+'Place total stock volume to the Summary Table
+                
+                SCLoop.Cells(Summary_TableRow, 12).Value = Total_Stockvolume
+                
+'Get the Close_PriceperYear
+
+                Close_PriceperYear = SCLoop.Cells(i, 6).Value
+                
+'Calculate Yearly_Change and place it in the Summary Table
+
+                Yearly_Change = Close_PriceperYear - Open_PriceperYear
+                SCLoop.Cells(Summary_TableRow, 10).Value = Yearly_Change
+                
+'Use conditional formatting to Yearly_Change  - positive denotes as green and negative denotes as red.
+                
+                If Yearly_Change >= 0 Then
+                   SCLoop.Cells(Summary_TableRow, 10).Interior.ColorIndex = 4
+                Else
+                    SCLoop.Cells(Summary_TableRow, 10).Interior.ColorIndex = 3
+                End If
+                
+'Use conditional fprmatting to calculate Percent_YearChange
+                
+                If Open_PriceperYear = 0 And Close_PriceperYear = 0 Then
+                    
+'Use zero as variable to determine whole change and no formula is used if there is a case where the denominator is zero.
+                    
+                    Percent_YearChange = 0
+                    SCLoop.Cells(Summary_TableRow, 11).Value = Percent_YearChange
+                    SCLoop.Cells(Summary_TableRow, 11).NumberFormat = "0.00%"
+                    
+                ElseIf Open_PriceperYear = 0 Then
+                    
+'To avoid infinite percent changes a new percent_yearchange_na is created and declared
+
+                    Dim Percent_YearChange_NA As String
+                    Percent_YearChange_NA = "New Stock"
+                    SCLoop.Cells(Summary_TableRow, 11).Value = Percent_YearChange
+                Else
+                    Percent_YearChange = Yearly_Change / Open_PriceperYear
+                    SCLoop.Cells(Summary_TableRow, 11).Value = Percent_YearChange
+                    SCLoop.Cells(Summary_TableRow, 11).NumberFormat = "0.00%"
+                End If
+                                
+'Place in the Summary Table row
+                Summary_TableRow = Summary_TableRow + 1
+                
+'Reset all variables
+                Total_Stockvolume = 0
+                Open_PriceperYear = 0
+                Close_PriceperYear = 0
+                Yearly_Change = 0
+                Percent_YearChange = 0
+            End If
+            Next i
+            
+'Find maximum % increase, % decrease, and total stock volume
+
+        SCLoop.Cells(2, 17).Value = WorksheetFunction.Max(SCLoop.Range("L2:L" & SCLoop.Range("K1").CurrentRegion.Rows.Count))
+        SCLoop.Cells(3, 17).Value = WorksheetFunction.Min(SCLoop.Range("L2:L" & SCLoop.Range("K1").CurrentRegion.Rows.Count))
+        SCLoop.Cells(4, 17).Value = WorksheetFunction.Max(SCLoop.Range("J2:J" & SCLoop.Range("K1").CurrentRegion.Rows.Count))
+        
+' Format tp make percentage
+
+       SCLoop.Cells(2, 17).Style = "Percent"
+       SCLoop.Cells(3, 17).Style = "Percent"
+       
+' to find the individual ticker with biggest (maximun) and smallest (minimun) Percent_YearChange
+
+        For i = 2 To SCLoop.Range("K1").CurrentRegion.Rows.Count
+            If SCLoop.Cells(i, 12).Value = SCLoop.Cells(2, 17).Value Then
+                SCLoop.Cells(2, 16).Value = SCLoop.Cells(i, 9).Value
+            ElseIf SCLoop.Cells(i, 12).Value = SCLoop.Cells(3, 17).Value Then
+                SCLoop.Cells(3, 16).Value = SCLoop.Cells(i, 9).Value
+            ElseIf SCLoop.Cells(i, 10).Value = SCLoop.Cells(4, 17).Value Then
+                SCLoop.Cells(4, 16).Value = SCLoop.Cells(i, 9).Value
+            End If
+        Next
+        Next
+End Sub
+       
