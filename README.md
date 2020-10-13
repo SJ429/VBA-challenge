@@ -1,41 +1,21 @@
-## Unit 2 - VBA- Scripting
+A VBA script used to analyze real stock market data in a Microsoft Excel workbook.
 
-### Overview
+Background
+For this project, I created a VBA (Visual Basic) script to analyze some stock market data. The data is inside a Microsoft Excel workbook and includes stock data for three years (2014, 2015, and 2016). Each year is a different tab/sheet inside the workbook.
 
-### Slide Shows
 
-* [2.1 Very VBA](https://drive.google.com/open?id=1xpBf7BjM9zxv8pRCe-fxSnTboTgOoQRrp8WraSxKkgQ)
-* [2.2 Vexing VBA](https://drive.google.com/open?id=1L-_yIwbWQTkFix_af4cWoKM6fV3-BkStu-GyVqON138)
-* [2.3 Victorious VBA](https://drive.google.com/open?id=1SU0xDLa1Cr790iIP_nZI42ypMjF2d1N7IgK-vu8lzI8)
+It loops through all the stocks for one year for each run and takes the following information:
 
-### Key Activities
+The ticker symbol
 
-#### Day 1
+Yearly change from opening price at the beginning of a given year to the closing price at the end of that year.
 
-* Students Do: Chess Board
-* Students Do: Total Calculator
-* Students Do: Sentence Breaker
-* Instructor Do: Conditionals
+The percent change from opening price at the beginning of a given year to the closing price at the end of that year.
 
-#### Day 2
+The total stock volume of the stock.
 
-* Partners Do: Warmup Activity (Budget Checker)
-* Instructor Do: For Loop
-* Instructor Do: Loop Conditionals
-* Students Do: Fizz Buzz
-* Partners Do: Lotto Search
-* Students Do: Hornets Nest
+It applies conditional formatting by highlighting positive yearly change values in green and negative yearly change values in red.
 
-#### Day 3
+Finally, it return the stock with the greatest percent increase, greatest percent decrease, and greatest total volume
 
-* Students Do: StarsCounter
-* Instructor Do: Formatter
-* Instructor Do: NextCell
-* Students Do: Wells Fargo Pt I
-* Instructor Do: Demo Multi-Sheets
-* Students Do: Wells Fargo Pt II
-* Students Do: Wells Fargo Pt III
 
-- - -
-
-Trilogy Education Services © 2019. All Rights Reserved.
