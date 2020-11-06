@@ -1,10 +1,10 @@
+
 # Stock Analysis with VBA 
 
-A VBA script was used to analyze real stock market data in a Microsoft Excel workbook.
 
-For this project, I created a VBA (Visual Basic) script to analyze some stock market data. 
+For this project, A VBA script was used to analyze real stock market data.
 
-There were three years (2014, 2015, and 2016) of data with each year in a different sheet inside the workbook.
+There were three years (2014, 2015, and 2016) of data with each year in a different sheet inside the Microsoft Excel workbook.
 
 
 The VBA script looped through all the stocks for one year for each run and took the following information:
